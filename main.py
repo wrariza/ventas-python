@@ -1,3 +1,5 @@
+import sys
+
 clients = 'pablo,ricardo,'
 
 
@@ -6,7 +8,19 @@ def print_not_client_list():
 
 
 def get_name_client(message='Name of client?'):
-    return raw_input(message)
+    name_client = None
+
+    while not name_client:
+        name_client = raw_input(message)
+
+        if name_client == 'exit':
+            name_client = None
+            break
+
+    if not name_client:
+        sys.exit()
+
+    return name_client
 
 
 def create_client(client_name):
@@ -38,6 +52,18 @@ def _delete_client(client_name):
         print_not_client_list()
 
 
+def _find_client(client_name):
+    global clients
+
+    clients = clients.split(',')
+
+    for client in clients:
+        if client != client_name:
+            continue
+        else:
+            return True
+
+
 def list_clients():
     print(clients)
     _add_comma()
@@ -55,6 +81,7 @@ def _print_welcom():
     print('[C] Create client')
     print('[D] Delete client')
     print('[U] Update client')
+    print('[F] Find client')
 
 
 if __name__ == "__main__":
@@ -67,5 +94,11 @@ if __name__ == "__main__":
         _delete_client(get_name_client())
     elif command == 'U':
         _update_client(get_name_client('Name client do you want update ?'), get_name_client())
+    elif command == 'F':
+        found =  _find_client(get_name_client('Name client do you want find ?'))
+        if found:
+            print('The client is in the list')
+        else:
+            print ('The client not is in the list')
     else:
         print('Invalid command')
